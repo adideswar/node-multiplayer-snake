@@ -1,13 +1,9 @@
-node ('Ubuntu-app-agent'){  
+node ('ubuntu-app-agent'){  
     def app
     stage('Cloning Git') {
         /* Let's make sure we have the repository cloned to our workspace */
        checkout scm
     }  
-    /*stage('SAST'){
-        build 'SECURITY-SAST-SNYK'
-    }*/
-
     
     stage('Build-and-Tag') {
     /* This builds the actual image; synonymous to
@@ -16,13 +12,10 @@ node ('Ubuntu-app-agent'){
     }
     stage('Post-to-dockerhub') {
     
-     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_credential') {
+     docker.withRegistry('https://registry.hub.docker.com', 'multiplayersnake_dockercreds') {
             app.push("latest")
         			}
          }
-    /*stage('SECURITY-IMAGE-SCANNER'){
-        build 'SECURITY-IMAGE-SCANNER-AQUAMICROSCANNER'
-    }*/
   
     
     stage('Pull-image-server') {
@@ -30,11 +23,5 @@ node ('Ubuntu-app-agent'){
          sh "docker-compose down"
          sh "docker-compose up -d"	
       }
-    
-   /* stage('DAST')
-        {
-        build 'SECURITY-DAST-OWASP_ZAP'
-        }
-   */
  
 }
